@@ -44,7 +44,7 @@ export function adjust(n: number, lower: number | undefined, upper: number | und
  * @param c the character to pad
  * @param n the length of the resulting string
  */
-export const padLeft: ((s: string, c: string, n: number) => string) = (s, c, n) => {
+export function padLeft(s: string, c: string, n: number): string {
 	const r = n - s.length;
 	let p = '';
 	if (c === '') {
@@ -57,7 +57,7 @@ export const padLeft: ((s: string, c: string, n: number) => string) = (s, c, n) 
 		p = p.substr(-r);
 	}
 	return p + s;
-};
+}
 
 /**
  * Pad a string to have at least n characters. The c characters are appended at the end (right) of the string
@@ -66,7 +66,7 @@ export const padLeft: ((s: string, c: string, n: number) => string) = (s, c, n) 
  * @param c the character to pad. If empty, space is used instead. If longer than one char, it is truncated at the end.
  * @param n the length of the resulting string
  */
-export const padRight: ((s: string, c: string, n: number) => string) = (s, c, n) => {
+export function padRight(s: string, c: string, n: number): string {
 	const r = n - s.length;
 	let p = '';
 	if (c === '') {
@@ -79,7 +79,20 @@ export const padRight: ((s: string, c: string, n: number) => string) = (s, c, n)
 		p = p.substr(0, r);
 	}
 	return s + p;
-};
+}
+
+/**
+ * Pad a number with leading zeros to have at least n characters.
+ * If the number is negative, the numbers absolute value is padded to one character less and a leading minus sign is added.
+ * If the number string is already longer than the given length, it is returned without change.
+ * @param s the number to pad.
+ * @param n the length of the resulting string
+ */
+export function padNumber(s: number, n: number): string {
+	const neg = s < 0;
+	const abs = Math.abs(s);
+	return (neg ? '-' : '') + padLeft(abs + '', '0', neg ? (n - 1) : n);
+}
 
 /**
  * Check whether a string starts with another string.

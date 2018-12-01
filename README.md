@@ -1,5 +1,8 @@
 # need-some-basic.js
 [![Build Status](https://travis-ci.org/need-some/need-some-basic.js.svg?branch=master)](https://travis-ci.org/need-some/need-some-basic.js)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![npm version](https://badge.fury.io/js/%40need-some%2Fbasic.svg)](https://badge.fury.io/js/%40need-some%2Fbasic)
+[![need-some/basic](https://img.shields.io/badge/need--some-basic-ff69b4.svg)](https://www.npmjs.com/org/need-some)
 
 _need-some_ is a collection of small yet useful functions.
 The basic package provides core functionality that can be used in many javascript and typescript applications.
@@ -32,6 +35,13 @@ Pad a string to have at least n characters. The c characters are appended in fro
 Pad a string to have at least n characters. The c characters are appended at the end (right) of the string
 
 	padRight (s: string, c: string, n: number): string
+
+### padNumber
+Pad a number with leading zeros to have at least n characters.
+If the number is negative, the numbers absolute value is padded to one character less and a leading minus sign is added.
+If the number string is already longer than the given length, it is returned without change.
+
+	padNumber (s: number, n: number): string
 
 ### startsWith
 Check whether a string starts with another string.

@@ -10,7 +10,8 @@ import {
 	splitBracket,
 	overwrite,
 	endsWith,
-	adjust
+	adjust,
+	padNumber
 } from '../module/stdmethods';
 
 describe('StdMethods.padLeft', () => {
@@ -48,6 +49,26 @@ describe('StdMethods.padRight', () => {
 		expect(result).toBe(param.expected);
 	});
 });
+
+describe('StdMethods.padNumber', () => {
+	const params = [
+		{ title: 'keep exact number', input: 456789, len: 6, expected: '456789' },
+		{ title: 'keep exact negative number', input: -45678, len: 6, expected: '-45678' },
+		{ title: 'keep long number', input: 4567890, len: 6, expected: '4567890' },
+		{ title: 'keep long negative number', input: -4567890, len: 6, expected: '-4567890' },
+		{ title: 'pad short number', input: 456, len: 6, expected: '000456' },
+		{ title: 'pad short negative number', input: -456, len: 6, expected: '-00456' },
+		{ title: 'pad null number', input: 0, len: 6, expected: '000000' },
+		{ title: 'keep number when no padding', input: 123, len: 0, expected: '123' },
+		{ title: 'keep number when negative padding', input: -123, len: -1, expected: '-123' },
+	];
+	pit('should ${title}', params, param => {
+		const result = padNumber(param.input, param.len);
+		expect(result).toBe(param.expected);
+	});
+});
+
+
 
 describe('StdMethods.trunc', () => {
 	const params = [

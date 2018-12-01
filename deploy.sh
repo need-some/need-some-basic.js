@@ -23,15 +23,18 @@ npm run test
 
 pubrepository="$(cat package.json | grep '"url": "' | tr -d " \t"  | cut -d '"' -f 4)"
 
-if [ ! -e target/github ]; then
-	cd target
-	git clone "$pubrepository" github
-else
-	cd target/github
-	git reset HEAD
-	git checkout .
-	git pull
+if [ "$1" = --force ]; then
+	if [ ! -e target/github ]; then
+		cd target
+		git clone "$pubrepository" github
+	else
+		cd target/github
+		git reset HEAD
+		git checkout .
+		git pull
+	fi
 fi
+
 cd "$dir"
 rsync -azv --delete --exclude node_modules --exclude target --exclude coverage --exclude .git ./ target/github/
 
