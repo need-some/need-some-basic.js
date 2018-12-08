@@ -91,7 +91,7 @@ export function padRight(s: string, c: string, n: number): string {
 export function padNumber(s: number, n: number): string {
 	const neg = s < 0;
 	const abs = Math.abs(s);
-	return (neg ? '-' : '') + padLeft(abs + '', '0', neg ? (n - 1) : n);
+	return (neg ? '-' : '') + padLeft(abs + '', '0', neg ? n - 1 : n);
 }
 
 /**
