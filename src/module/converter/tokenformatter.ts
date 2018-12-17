@@ -61,7 +61,11 @@ export function toLowerCase(locale: string): StringTokenFormat {
  * @param locale The locale to use for upper case. TODO: Currently this locale is ignored.
  */
 export function firstToUpper(locale: string): StringTokenFormat {
-	return input => (('' + input).substr(0, 1)).toUpperCase().substr(0, 1) + ('' + input).substr(1); // TODO: use locale
+	return input =>
+		('' + input)
+			.substr(0, 1)
+			.toUpperCase()
+			.substr(0, 1) + ('' + input).substr(1); // TODO: use locale
 }
 
 /**
@@ -69,7 +73,11 @@ export function firstToUpper(locale: string): StringTokenFormat {
  * @param locale The locale to use for lower case. TODO: Currently this locale is ignored.
  */
 export function firstToLower(locale: string): StringTokenFormat {
-	return input => (('' + input).substr(0, 1)).toLowerCase().substr(0, 1) + ('' + input).substr(1); // TODO: use locale
+	return input =>
+		('' + input)
+			.substr(0, 1)
+			.toLowerCase()
+			.substr(0, 1) + ('' + input).substr(1); // TODO: use locale
 }
 
 /**
@@ -82,7 +90,10 @@ export function toInverseCase(locale: string): StringTokenFormat {
 	return input => {
 		const allLower = lower(input).split('');
 		const allUpper = upper(input).split('');
-		return (input + '').split('').map((c, i) => allLower[i] === c ? allUpper[i] : allLower[i]).join('');
+		return (input + '')
+			.split('')
+			.map((c, i) => (allLower[i] === c ? allUpper[i] : allLower[i]))
+			.join('');
 	};
 }
 
@@ -114,7 +125,7 @@ export function concat(first: StringTokenFormat, ...formatters: StringTokenForma
  * @param first the initial formatter
  * @param formatters the following formatters
  */
-export function concat(first: StringTokenFormat|NumberTokenFormat, ...formatters: StringTokenFormat[]): StringTokenFormat {
+export function concat(first: StringTokenFormat | NumberTokenFormat, ...formatters: StringTokenFormat[]): StringTokenFormat {
 	return input => {
 		return formatters.reduce((value, formatter) => formatter(value), (<StringTokenFormat>first)(input));
 	};
