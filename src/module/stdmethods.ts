@@ -97,7 +97,7 @@ export function padRight(s: string, c: string, n: number): string {
  * If the number string is already longer than the given length, it is returned without change.
  * @param s the number to pad.
  * @param n the length of the resulting string
- * @param handleMinusZero flag indicating the use of minus zero -0: true treats it as negative number
+ * @param handleMinusZero <default: false> flag indicating the use of minus zero -0: true treats it as negative number.
  */
 export function padNumber(s: number, n: number, handleMinusZero?: boolean): string {
 	const minusZero = handleMinusZero && isMinusZero(s);

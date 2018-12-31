@@ -17,9 +17,10 @@ export type StringTokenFormat = (input: string | number) => string;
 /**
  * Creates a formatter that prepends zero characters.
  * @param n the number of characters of the result string
+ * @param handleMinusZero <default: false> flag indicating the use of minus zero -0: true treats it as negative number.
  */
-export function padNumberLeft(n: number): NumberTokenFormat {
-	return input => padNumber(input, n);
+export function padNumberLeft(n: number, handleMinusZero?: boolean): NumberTokenFormat {
+	return input => padNumber(input, n, handleMinusZero);
 }
 
 /**
