@@ -18,6 +18,16 @@ export const __truncPolyfill: ((n: number) => number) = n => (n >= 0 ? Math.floo
 export const trunc: ((n: number) => number) = (<any>Math).trunc || __truncPolyfill;
 
 /**
+ * Test whether a number is negative zero -0.
+ * The equals and identity operators as all other operations including string conversion treat -0 like 0.
+ * @param n the number to check
+ * @returns true if and only if n is -0
+ */
+export function isMinusZero(n: number) {
+	return n === 0 && 1 / n !== 1 / 0;
+}
+
+/**
  * Adjust number, so it fits into the given borders. If the given number is lower than the lower bound
  * (or greater than the upper bound), the bound is returned.
  * If a bound is undefined, this side is not adjusted. If the lower bound is greater than the upper bound,
@@ -87,9 +97,11 @@ export function padRight(s: string, c: string, n: number): string {
  * If the number string is already longer than the given length, it is returned without change.
  * @param s the number to pad.
  * @param n the length of the resulting string
+ * @param handleMinusZero flag indicating the use of minus zero -0: true treats it as negative number
  */
-export function padNumber(s: number, n: number): string {
-	const neg = s < 0;
+export function padNumber(s: number, n: number, handleMinusZero?: boolean): string {
+	const minusZero = handleMinusZero && isMinusZero(s);
+	const neg = minusZero || s < 0;
 	const abs = Math.abs(s);
 	return (neg ? '-' : '') + padLeft(abs + '', '0', neg ? n - 1 : n);
 }

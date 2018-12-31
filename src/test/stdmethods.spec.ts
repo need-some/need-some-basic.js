@@ -11,7 +11,8 @@ import {
 	overwrite,
 	endsWith,
 	adjust,
-	padNumber
+	padNumber,
+	isMinusZero
 } from '../module/stdmethods';
 
 describe('StdMethods.padLeft', () => {
@@ -50,21 +51,41 @@ describe('StdMethods.padRight', () => {
 	});
 });
 
+describe('StdMethods.isMinusZero', () => {
+	const params = [
+		{ title: 'positive number', input: 456789, expected: false },
+		{ title: 'negative number', input: -456, expected: false },
+		{ title: 'zero', input: 0, expected: false },
+		{ title: 'minus zero', input: -0, expected: true },
+		{ title: 'positive zero result', input: 6 * 0, expected: false },
+		{ title: 'negative zero result', input: -6 * 0, expected: true }
+	];
+	pit('should identify ${title}', params, param => {
+		const result = isMinusZero(param.input);
+		expect(result).toBe(param.expected);
+	});
+});
+
 describe('StdMethods.padNumber', () => {
 	const params = [
-		{ title: 'keep exact number', input: 456789, len: 6, expected: '456789' },
-		{ title: 'keep exact negative number', input: -45678, len: 6, expected: '-45678' },
-		{ title: 'keep long number', input: 4567890, len: 6, expected: '4567890' },
-		{ title: 'keep long negative number', input: -4567890, len: 6, expected: '-4567890' },
-		{ title: 'pad short number', input: 456, len: 6, expected: '000456' },
-		{ title: 'pad short negative number', input: -456, len: 6, expected: '-00456' },
-		{ title: 'pad null number', input: 0, len: 6, expected: '000000' },
-		{ title: 'keep number when no padding', input: 123, len: 0, expected: '123' },
-		{ title: 'keep number when negative padding', input: -123, len: -1, expected: '-123' }
+		{ title: 'keep exact number', input: 456789, len: 6, expected: '456789', expectedMinusZero: '456789' },
+		{ title: 'keep exact negative number', input: -45678, len: 6, expected: '-45678', expectedMinusZero: '-45678' },
+		{ title: 'keep long number', input: 4567890, len: 6, expected: '4567890', expectedMinusZero: '4567890' },
+		{ title: 'keep long negative number', input: -4567890, len: 6, expected: '-4567890', expectedMinusZero: '-4567890' },
+		{ title: 'pad short number', input: 456, len: 6, expected: '000456', expectedMinusZero: '000456' },
+		{ title: 'pad short negative number', input: -456, len: 6, expected: '-00456', expectedMinusZero: '-00456' },
+		{ title: 'pad zero number', input: 0, len: 6, expected: '000000', expectedMinusZero: '000000' },
+		{ title: 'pad minus zero number as zero', input: -0, len: 6, expected: '000000', expectedMinusZero: '-00000' },
+		{ title: 'keep number when no padding', input: 123, len: 0, expected: '123', expectedMinusZero: '123' },
+		{ title: 'keep number when negative padding', input: -123, len: -1, expected: '-123', expectedMinusZero: '-123' }
 	];
 	pit('should ${title}', params, param => {
 		const result = padNumber(param.input, param.len);
 		expect(result).toBe(param.expected);
+	});
+	pit('should ${title} with -0 handling', params, param => {
+		const result = padNumber(param.input, param.len, true);
+		expect(result).toBe(param.expectedMinusZero);
 	});
 });
 
