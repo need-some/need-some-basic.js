@@ -1,6 +1,6 @@
 # need-some-basic.js
 [![Build Status](https://travis-ci.org/need-some/need-some-basic.js.svg?branch=master)](https://travis-ci.org/need-some/need-some-basic.js)
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/%40need-some%2Fbasic.svg)](https://badge.fury.io/js/%40need-some%2Fbasic)
 [![need-some/basic](https://img.shields.io/badge/need--some-basic-ff69b4.svg)](https://www.npmjs.com/org/need-some)
 [![Dependencies](https://david-dm.org/need-some/need-some-basic.js/status.svg)](https://david-dm.org/need-some/need-some-basic.js)
