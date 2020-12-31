@@ -1,6 +1,6 @@
 {
 	"name": "@need-some/basic",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Need Some Basic Javascript Basic functions and helpers for some library",
 	"main": "index.js",
 	"types": "index.d.ts",
@@ -11,7 +11,7 @@
 		"cti": "cti ./src/ --excludes test",
 		"test": "tsc && karma start karma.conf.headless.js",
 		"test-browser": "karma start",
-		"format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+		"format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\" \"./*.js\" \"./*.json\"",
 		"lint": "tslint -p tsconfig.json -c package.json -t verbose"
 	},
 	"repository": {
@@ -121,7 +121,7 @@
 			"check-else",
 			"check-whitespace"
 		],
-		"prefer-const": true,
+		"prefer-const": false,
 		"quotemark": [
 			true,
 			"single"
@@ -132,7 +132,7 @@
 			"always"
 		],
 		"triple-equals": [
-			true,
+			false,
 			"allow-null-check"
 		],
 		"typedef-whitespace": [
