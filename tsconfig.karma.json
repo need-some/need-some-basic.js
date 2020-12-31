@@ -5,14 +5,12 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"declaration": true,
-		"outDir": "./target/dist",
-		"sourceMap": true,
-		"strict": true,
+		"outDir": "./target/dist-karma",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"lib": ["es5", "es2015", "es2015.promise"]
+		"lib": ["es5", "es2015", "es2015.promise", "dom"]
 	},
 	"typeRoots": ["node_modules/@types"],
-	"include": ["src"],
-	"exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts", "**/*.mock.ts"]
+	"include": ["src/module", "src/test"],
+	"exclude": ["node_modules"]
 }
