@@ -126,10 +126,61 @@ export class ObservableProxy {
 	static wrap<T>(object: T): T {
 		// tslint:disable-next-line: no-any // force any and handle hidden member
 		let anyObject: any = object;
+		anyObject.logging = 'logging';
 		if (!anyObject || anyObject.observableProxy) {
 			return object;
 		}
 		let eventTarget = new EventListenerList();
+
+		let functionListeners: { [key: string]: string[] } = {};
+
+		for (let prop in anyObject) {
+			if (typeof anyObject[prop] == 'function' && anyObject[prop].call) {
+				functionListeners[prop] = [];
+			}
+		}
+
+		// tslint:disable-next-line: no-any // proxy properties do not care about type
+		const dispatch = (obj: any, member: string, memberName: string, value: any, oldvalue: any) => {
+			let allowAnonymous = !functionListeners.hasOwnProperty(member);
+			let event: ModelChangeEvent = { source: obj, obj: object, member: memberName, value: value, oldvalue: oldvalue };
+			eventTarget.dispatchEvent(member, event);
+			anyObject.logging += '\ndispatch ' + member + ' ' + value;
+			anyObject.logging += '\ndispatch ' + JSON.stringify(eventTarget);
+			for (let prop in functionListeners) {
+				if (functionListeners.hasOwnProperty(prop)) {
+					let fm = functionListeners[prop];
+					if ((fm.length === 0 && allowAnonymous) || fm.indexOf(member) != -1) {
+						anyObject.logging += '\nprop ' + prop + ' ' + allowAnonymous;
+						let fvalue = anyObject[prop].call(anyObject);
+						dispatch(obj, prop, prop, fvalue, undefined);
+					}
+				}
+			}
+		};
+
+		// tslint:disable-next-line: no-any // proxy properties do not care about type
+		const enabledFunction = (obj: any, member: string, state?: boolean) => {
+			let isFunction = functionListeners.hasOwnProperty(member);
+			let valueBefore = !(isFunction || anyObject['__disabled__' + member]);
+			if (state === undefined) {
+				// the getter
+				return valueBefore;
+			} else if (state !== valueBefore) {
+				// the setter
+				if (isFunction) {
+					return false;
+				}
+				if (state) {
+					delete anyObject['__disabled__' + member];
+				} else {
+					anyObject['__disabled__' + member] = true;
+				}
+				dispatch(obj, '__enabled__' + member, member + '[enabled]', state, valueBefore);
+			} else {
+				return true;
+			}
+		};
 
 		let handler = {
 			// tslint:disable-next-line: no-any // proxy properties do not care about type
@@ -137,24 +188,30 @@ export class ObservableProxy {
 				if (member == 'observableProxy') {
 					return true;
 				} else if (member == 'addEventListener') {
-					return (listener: EventListener, m: string) => eventTarget.addEventListener(m, listener);
+					return (m: string, listener: EventListener) => eventTarget.addEventListener(m, listener);
 				} else if (member == 'removeEventListener') {
-					return (listener: EventListener, m: string) => eventTarget.removeEventListener(m, listener);
+					return (m: string, listener: EventListener) => eventTarget.removeEventListener(m, listener);
 				} else if (member == '__quietset') {
 					// tslint:disable-next-line: no-any // proxy properties do not care about type
 					return (m: string, value: any) => (obj[m] = value);
+				} else if (member == '__enabled') {
+					// tslint:disable-next-line: no-any // proxy properties do not care about type
+					return (m: string, state?: boolean) => enabledFunction(obj, m, state);
 				}
 				return obj[member];
 			},
 			// tslint:disable-next-line: no-any // proxy properties do not care about type
 			set: function(obj: any, member: string, value: any) {
+				if (!enabledFunction(obj, member)) {
+					// cannot set disabled member
+					return false;
+				}
 				let oldvalue = obj[member];
 				if (oldvalue === value) {
 					return true;
 				}
 				obj[member] = value;
-				let event: ModelChangeEvent = { source: obj, obj: object, member: member, value: value, oldvalue: oldvalue };
-				eventTarget.dispatchEvent(member, event);
+				dispatch(obj, member, member, value, oldvalue);
 				return true;
 			}
 		};
@@ -168,7 +225,7 @@ export class ObservableProxy {
 		if (!object || !object.observableProxy) {
 			return;
 		}
-		object.addEventListener(listener, member);
+		object.addEventListener(member, listener);
 	}
 
 	// tslint:disable-next-line: no-any // allow listener on all objects - ignored if not proxy
@@ -176,7 +233,32 @@ export class ObservableProxy {
 		if (!object || !object.observableProxy) {
 			return;
 		}
-		object.removeEventListener(listener, member);
+		object.removeEventListener(member, listener);
+	}
+
+	// tslint:disable-next-line: no-any // allow listener on all objects - ignored if not proxy
+	static addEnabledEventListener(object: any, member: string, listener: EventListenerMethod) {
+		ObservableProxy.addEventListener(object, '__enabled__' + member, listener);
+	}
+
+	// tslint:disable-next-line: no-any // allow listener on all objects - ignored if not proxy
+	static removeEnabledEventListener(object: any, member: string, listener: EventListenerMethod) {
+		ObservableProxy.removeEventListener(object, '__enabled__' + member, listener);
+	}
+
+	// tslint:disable-next-line: no-any // allow listener on all objects - ignored if not proxy
+	static setEnabled(object: any, member: string, state: boolean) {
+		if (!object || !object.observableProxy) {
+			return;
+		}
+		object.__enabled(member, state);
+	}
+	// tslint:disable-next-line: no-any // allow listener on all objects - ignored if not proxy
+	static isEnabled(object: any, member: string) {
+		if (!object || !object.observableProxy) {
+			return;
+		}
+		return object.__enabled(member);
 	}
 }
 
