@@ -1,6 +1,6 @@
 {
 	"name": "@need-some/basic",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"description": "Need Some Basic Javascript Basic functions and helpers for some library",
 	"main": "index.js",
 	"types": "index.d.ts",
@@ -19,7 +19,7 @@
 		"url": "git@github.com:need-some/need-some-basic.js.git"
 	},
 	"devDependencies": {
-		"@need-some/test": "^0.1.0",
+		"@need-some/test": "^0.1.1",
 		"@types/jasmine": "^3.3.0",
 		"create-ts-index": "^1.0.14",
 		"jasmine-core": "^3.3.0",
