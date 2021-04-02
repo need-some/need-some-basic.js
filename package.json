@@ -1,6 +1,6 @@
 {
 	"name": "@need-some/basic",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"description": "Need Some Basic Javascript Basic functions and helpers for some library",
 	"main": "index.js",
 	"types": "index.d.ts",

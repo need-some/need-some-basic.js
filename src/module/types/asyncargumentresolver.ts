@@ -37,4 +37,5 @@ export class AsyncArgumentResolver<T> {
 	}
 }
 
-export default AsyncArgument;
+export default AsyncArgumentResolver;
+

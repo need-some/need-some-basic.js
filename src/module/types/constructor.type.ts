@@ -20,13 +20,22 @@ export interface ArrayConstructor<T, S> {
 export type Constructor<T> = ScalarConstructor<T> | ArrayConstructor<T, any>;
 
 /**
- * Create array converter for array
+ * Create array constructor for array
  * @param type scalar type to wrap
  */
 export function asArray<T>(type: ScalarConstructor<T>): ArrayConstructor<T[], T> {
 	return {
 		type: type
 	};
+}
+
+/**
+ * Type guard for array constructor
+ * @param type type to check
+ */
+// tslint:disable-next-line: no-any // second arg is unused in check
+export function isArray(type: any): type is ArrayConstructor<any, any> {
+	return type.type !== undefined;
 }
 
 /**
@@ -37,10 +46,11 @@ export function create<T>(type: Constructor<T>): T {
 	// tslint:disable-next-line: no-any // Array constructor safely wraps scalar type
 	let result: any;
 	// tslint:disable-next-line: no-any // Array constructor safely wraps scalar type
-	if ((<ArrayConstructor<T, any>>type).type) {
+	if (isArray(type)) {
 		result = [];
 	} else {
 		result = new (<ScalarConstructor<T>>type)();
 	}
 	return <T>result;
 }
+
