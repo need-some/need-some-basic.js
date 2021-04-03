@@ -29,6 +29,15 @@ export interface ArrayConstructor<T, S> {
 export type Constructor<T> = ScalarConstructor<T> | ArrayConstructor<T, any>;
 
 /**
+ * Type guard for class constructor
+ * @param type type to check
+ */
+export function isClass<T>(type: Constructor<T>): type is ClassConstructor<T> {
+	// tslint:disable-next-line: no-any // type check performed
+	return type && (type as any).type === undefined;
+}
+
+/**
  * Create array constructor for array
  * @param type scalar type to wrap
  */
@@ -43,8 +52,9 @@ export function asArray<T>(type: ScalarConstructor<T>): ArrayConstructor<T[], T>
  * @param type type to check
  */
 // tslint:disable-next-line: no-any // second arg is unused in check
-export function isArray(type: any): type is ArrayConstructor<any, any> {
-	return type.type !== undefined;
+export function isArray<T>(type: Constructor<T>): type is ArrayConstructor<T, any> {
+	// tslint:disable-next-line: no-any // type check performed
+	return type && (type as ArrayConstructor<T, any>).type !== undefined;
 }
 
 /**
@@ -62,19 +72,26 @@ export function asInterface<T>() {
  * Type guard for interface constructor
  * @param type type to check
  */
-// tslint:disable-next-line: no-any // second arg is unused in check
-export function isInterface(type: any): type is InterfaceConstructor<any> {
-	return type.__faketype !== undefined;
+export function isInterface<T>(type: Constructor<T>): type is InterfaceConstructor<T> {
+	// tslint:disable-next-line: no-any // type check performed
+	return type && (type as any).__faketype !== undefined;
+}
+
+/**
+ * Type guard for interface constructor
+ * @param type type to check
+ */
+export function isScalar<T>(type: Constructor<T>): type is ScalarConstructor<T> {
+	return isInterface(type) || isClass(type);
 }
 
 /**
  * Create object of type
  * @param type type to wrap
  */
-export function create<T>(type: Constructor<T>): T {
+export function newInstance<T>(type: Constructor<T>): T {
 	// tslint:disable-next-line: no-any // Array constructor safely wraps scalar type
 	let result: any;
-	// tslint:disable-next-line: no-any // Array constructor safely wraps scalar type
 	if (isArray(type)) {
 		result = [];
 	} else if (isInterface(type)) {
@@ -84,4 +101,5 @@ export function create<T>(type: Constructor<T>): T {
 	}
 	return <T>result;
 }
+
 

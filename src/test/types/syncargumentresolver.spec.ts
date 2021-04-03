@@ -2,7 +2,7 @@ import { SyncArgument } from '../../module/types/syncargument.type';
 import { SyncArgumentResolver } from '../../module/types/syncargumentresolver';
 
 class TestWithArg {
-	public testValue = 0;
+	public testValue = 3;
 
 	setSync(a: SyncArgument<number>) {
 		this.testValue = new SyncArgumentResolver(a).getValue();

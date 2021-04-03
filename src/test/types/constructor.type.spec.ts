@@ -1,4 +1,4 @@
-import { Constructor, ArrayConstructor, ClassConstructor, InterfaceConstructor, create, asArray, asInterface } from '../../module/types/constructor.type';
+import { Constructor, ArrayConstructor, ClassConstructor, InterfaceConstructor, newInstance, asArray, asInterface } from '../../module/types/constructor.type';
 
 class Simple {
 	test: string | undefined;
@@ -21,11 +21,11 @@ describe('Constructor', () => {
 	});
 	it('should create scalar object', () => {
 		let sut = Simple;
-		expect(create(sut).test).toBeUndefined();
+		expect(newInstance(sut).test).toBeUndefined();
 	});
 	it('should create scalar object with defined constructor', () => {
 		let sut = Initialized;
-		expect(create(sut).test).toBe('works');
+		expect(newInstance(sut).test).toBe('works');
 	});
 	it('should wrap array constructor', () => {
 		let sut = asArray(Simple);
@@ -33,11 +33,11 @@ describe('Constructor', () => {
 	});
 	it('should create array object', () => {
 		let sut = asArray(Simple);
-		expect(create(sut).length).toBe(0);
+		expect(newInstance(sut).length).toBe(0);
 	});
 	it('should create interface object', () => {
 		let sut = asInterface<Inter>();
-		expect(create(sut) as any).toEqual({});
+		expect(newInstance(sut) as any).toEqual({});
 	});
 
 });

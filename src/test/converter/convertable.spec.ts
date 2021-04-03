@@ -1,6 +1,7 @@
 import { dummyConverter, dummyConverterFactory } from './dummyconverter.mock.spec';
-import { wrapConverter, wrapUnmarshaller, wrapMarshaller } from '../../module/converter/converterfactories';
 import Convertable from '../../module/converter/convertable';
+import {Color, ColorConverter} from '../../module/types/color.type';
+import { Constructor } from '../../module/types/constructor.type';
 
 describe('Convertable', () => {
 	it('simple converter', () => {

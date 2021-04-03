@@ -22,6 +22,9 @@ export type Convertable<T, S> = Converter<T, S> | anyConverterFactory<T, S> | an
 export namespace Convertable {
 	export function createConverterInstance<T, S>(converter: SyncArgument<Convertable<T, S>>): Converter<T, S> {
 		let converterInstance: Converter<T, S>;
+		if (!converter) {
+			return 'undefined is not a converter types' as never;
+		}
 		converter = new SyncArgumentResolver(converter).getValue();
 		if ((<Converter<T, S>>converter).marshal !== undefined) {
 			// a converter is detected if the marshal method exists
