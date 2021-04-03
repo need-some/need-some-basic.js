@@ -1,7 +1,16 @@
 /**
  * Constructor of a class.
  */
-export type ScalarConstructor<T> = new () => T;
+export type ClassConstructor<T> = new () => T;
+
+/**
+ * Helper for a interface type construction
+ */
+// tslint:disable-next-line: no-empty-interface // force definition as an interface
+export interface InterfaceConstructor<T> {
+}
+
+export type ScalarConstructor<T> = ClassConstructor<T> | InterfaceConstructor<T>;
 
 /**
  * Helper for a array type construction
@@ -25,7 +34,7 @@ export type Constructor<T> = ScalarConstructor<T> | ArrayConstructor<T, any>;
  */
 export function asArray<T>(type: ScalarConstructor<T>): ArrayConstructor<T[], T> {
 	return {
-		type: type
+		type
 	};
 }
 
@@ -39,6 +48,26 @@ export function isArray(type: any): type is ArrayConstructor<any, any> {
 }
 
 /**
+ * Create interface constructor for parameter
+ * @param type scalar type to wrap
+ */
+export function asInterface<T>() {
+	const result = <InterfaceConstructor<T>>{};
+	// tslint:disable-next-line: no-any // only code to enforce a member
+	(result as any).__faketype = 'initialized';
+	return result;
+}
+
+/**
+ * Type guard for interface constructor
+ * @param type type to check
+ */
+// tslint:disable-next-line: no-any // second arg is unused in check
+export function isInterface(type: any): type is InterfaceConstructor<any> {
+	return type.__faketype !== undefined;
+}
+
+/**
  * Create object of type
  * @param type type to wrap
  */
@@ -48,8 +77,10 @@ export function create<T>(type: Constructor<T>): T {
 	// tslint:disable-next-line: no-any // Array constructor safely wraps scalar type
 	if (isArray(type)) {
 		result = [];
+	} else if (isInterface(type)) {
+		result = {};
 	} else {
-		result = new (<ScalarConstructor<T>>type)();
+		result = new (<ClassConstructor<T>>type)();
 	}
 	return <T>result;
 }

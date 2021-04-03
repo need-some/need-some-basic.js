@@ -16,3 +16,5 @@ export interface ConverterFactory<T, S, C> {
 	 */
 	createConverter(param: C): Converter<T, S>;
 }
+
+export default ConverterFactory;

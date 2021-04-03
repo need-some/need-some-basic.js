@@ -19,3 +19,9 @@ export const dummyConverter2 = {
 		return 'marshal 2 ' + string;
 	}
 };
+
+export const dummyConverterFactory = {
+	createConverter(param: string[]) {
+		return (param && param[0] === 'two') ? dummyConverter2 : dummyConverter;
+	}
+};

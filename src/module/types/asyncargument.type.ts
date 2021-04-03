@@ -3,3 +3,4 @@
  */
 export type AsyncArgument<T> = T | (() => T) | (() => Promise<T>) | Promise<T>;
 
+export default AsyncArgument;
